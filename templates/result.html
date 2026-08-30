@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prediction · Plant Disease Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="brand">🌿 PlantDoc</div>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}">Detect</a>
+      <a href="{{ url_for('about') }}">About</a>
+    </div>
+  </nav>
+
+  {% if demo_mode %}
+  <div class="banner banner-warn">
+    ⚠️ Demo mode — prediction is simulated. Train a real model to get accurate results.
+  </div>
+  {% endif %}
+
+  <main class="container">
+    <div class="result-grid">
+      <div class="result-images">
+        <div class="image-card">
+          <h4>Uploaded Image</h4>
+          <img src="{{ image_url }}" alt="uploaded leaf" />
+        </div>
+        {% if gradcam_url %}
+        <div class="image-card">
+          <h4>Grad-CAM Attention</h4>
+          <img src="{{ gradcam_url }}" alt="grad-cam heatmap" />
+          <p class="caption">Red regions = strongest influence on the prediction.</p>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="result-details">
+        <div class="verdict">
+          <div class="verdict-label">Diagnosis</div>
+          <h2>{{ top.pretty }}</h2>
+          <div class="confidence-big">
+            {{ (top.confidence * 100) | round(1) }}% confidence
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>Top predictions</h3>
+          <ul class="predictions">
+            {% for p in predictions %}
+            <li>
+              <div class="pred-header">
+                <span class="pred-name">{{ p.pretty }}</span>
+                <span class="pred-pct">{{ (p.confidence * 100) | round(1) }}%</span>
+              </div>
+              <div class="pred-bar">
+                <div class="pred-fill" style="width: {{ (p.confidence * 100) | round(1) }}%"></div>
+              </div>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="section info-block">
+          <h3>About this condition</h3>
+          <div class="info-item">
+            <strong>Cause:</strong>
+            <p>{{ info.cause }}</p>
+          </div>
+          <div class="info-item">
+            <strong>Symptoms:</strong>
+            <p>{{ info.symptoms }}</p>
+          </div>
+          <div class="info-item">
+            <strong>Recommended treatment:</strong>
+            <p>{{ info.treatment }}</p>
+          </div>
+        </div>
+
+        <a href="{{ url_for('index') }}" class="btn btn-primary">Analyse Another</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>This tool provides guidance only. For commercial farming decisions consult a qualified agronomist.</p>
+  </footer>
+</body>
+</html>

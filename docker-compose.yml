@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  plantdoc:
+    build: .
+    container_name: plantdoc
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./saved_model:/app/saved_model
+      - ./static/uploads:/app/static/uploads
+    environment:
+      - FLASK_SECRET=change-me-in-production
+    restart: unless-stopped

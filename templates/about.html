@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About · Plant Disease Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <nav class="nav">
+    <div class="brand">🌿 PlantDoc</div>
+    <div class="nav-links">
+      <a href="{{ url_for('index') }}">Detect</a>
+      <a href="{{ url_for('about') }}">About</a>
+    </div>
+  </nav>
+
+  <main class="container narrow">
+    <h1>About this project</h1>
+    <p class="lead">
+      PlantDoc is an end-to-end deep-learning application that identifies
+      crop leaf diseases from smartphone images. It was built as an
+      applied ML portfolio project demonstrating the full pipeline —
+      data, modelling, evaluation, deployment, and explainability.
+    </p>
+
+    <h2>The Model</h2>
+    <p>
+      The classifier is a <strong>MobileNetV2</strong> convolutional neural
+      network pre-trained on ImageNet and fine-tuned on the
+      <a href="https://www.kaggle.com/datasets/abdallahalidev/plantvillage-dataset"
+         target="_blank" rel="noopener">PlantVillage</a> dataset
+      (54,306 images across 38 classes covering 14 crop species).
+      Training uses a two-phase schedule: first the classifier head is
+      trained with the backbone frozen; then the top 30 layers of the
+      backbone are unfrozen and fine-tuned with a low learning rate.
+    </p>
+
+    <h2>Explainability</h2>
+    <p>
+      For every prediction, a <strong>Grad-CAM heatmap</strong>
+      (Selvaraju et al., 2017) shows which regions of the leaf most
+      influenced the model's decision. This is important in agriculture,
+      where users need to trust and verify AI recommendations before
+      acting on them.
+    </p>
+
+    <h2>Tech stack</h2>
+    <ul>
+      <li>TensorFlow 2 · Keras</li>
+      <li>Flask 3 for the web server &amp; REST API</li>
+      <li>OpenCV for Grad-CAM overlay rendering</li>
+      <li>Pillow for image I/O</li>
+      <li>Vanilla HTML / CSS / JavaScript (no framework)</li>
+      <li>Docker for containerised deployment</li>
+    </ul>
+
+    <h2>Limitations</h2>
+    <ul>
+      <li>Trained on lab-style PlantVillage images with plain backgrounds.
+          Field photos with busy backgrounds may perform worse.</li>
+      <li>Covers 38 specific classes only; other diseases will be
+          misclassified as the closest match in the training set.</li>
+      <li>Treatment advice is general guidance, not a substitute for
+          agronomist consultation.</li>
+    </ul>
+
+    <a href="{{ url_for('index') }}" class="btn btn-primary">Try it now →</a>
+  </main>
+
+  <footer class="footer">
+    <p>Source code &amp; docs on <a href="#">GitHub</a>.</p>
+  </footer>
+</body>
+</html>
